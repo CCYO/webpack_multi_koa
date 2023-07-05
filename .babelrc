@@ -1,0 +1,13 @@
+{
+	"presets": [
+		[
+			"@babel/preset-env",
+			{
+				"useBuiltIns": "usage",	// 按需引入 corejs 中的模块
+				"corejs": 3	// 核心 js 版本
+			}
+		]
+	],
+	"sourceType": "unambiguous"
+}
+
