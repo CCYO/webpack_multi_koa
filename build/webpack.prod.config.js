@@ -1,4 +1,3 @@
-const { resolve } = require('path')
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 // const OptimizeCss = require('optimize-css-assets-webpack-plugin')
@@ -7,7 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const CONFIG = require('./config')
-const glob = require('glob')
 const webpackBaseConfig = require('./webpack.base.config')
 
 module.exports = merge(webpackBaseConfig, {
@@ -66,30 +64,31 @@ module.exports = merge(webpackBaseConfig, {
 		new FileManagerPlugin({
 			// destination 相對 webpack context
 			events: {
+				onStart: {
+					delete: [
+						`../server/${CONFIG.BUILD.VIEW}`,
+						`../server/${CONFIG.SERVER.ASSET}`
+					]
+				},
 				onEnd: [
 					{
-						copy: [
-							// { source: `../${CONFIG.DIR.DIST}/${CONFIG.DIR.VIEW}`, destination: '../server/views' },
-							{ 
-								source: `../${CONFIG.DIR.DIST}/[!views]`,
-								destination: '../server/assets',
-								// options: {
-								// 	globOptions: {
-								// 		dot: true,
-								// 		ignore: ['views/*']
-								// 	}
-								// }
-							},
-						]
+						move: [{
+							source: `../${CONFIG.BUILD.DIST}/${CONFIG.BUILD.VIEW}`,
+							destination: `../server/${CONFIG.BUILD.VIEW}`
+						}]
 					},
-					// {
-					// 	delete: [`../${CONFIG.DIR.DIST}/${CONFIG.DIR.VIEW}`]
-					// },
-					// {
-					// 	move: [
-					// 		{ source: `../${CONFIG.DIR.DIST}`, destination: '../server/assets' },
-					// 	]
-					// }
+					{
+						move: [{
+							source: `../${CONFIG.BUILD.DIST}`,
+							destination: `../server/${CONFIG.SERVER.ASSET}`
+						}]
+					},
+					{
+						copy: [{
+							source: '../src/css/lib',
+							destination: '../server/assets/css/lib'
+						}]
+					},
 				]
 			}
 		}),
@@ -98,7 +97,7 @@ module.exports = merge(webpackBaseConfig, {
 		}),
 
 		new MiniCssExtractPlugin({
-			filename: `${CONFIG.DIR.STYLE}/[name].[hash:5].min.css`
+			filename: `${CONFIG.BUILD.STYLE}/[name].[contenthash:5].min.css`
 		}),
 
 		new OptimizeCss()

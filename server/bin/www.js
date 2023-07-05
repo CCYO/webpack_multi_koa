@@ -7,7 +7,7 @@
 const app = require('../app')
 const debug = require('debug')('master:server')
 const http = require('http')
-const CONFIG = require('../../build/config.json')
+const CONFIG = require('../../build/config')
 /**
  * Get port from environment and store in Express.
  */

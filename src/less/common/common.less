@@ -1,8 +1,17 @@
 @import '../../css/reset.css';
 @import "./variables";
 @import "./mixins";
-
-html, body {
+@font-face {
+	font-family: 'Xanh Mono';
+	src: url('../../static/fonts/XanhMono-Regular.ttf');
+}
+@font-face {
+	font-family: 'Noto Serif TC';
+	src: url('../../static/fonts/NotoSerifTC-Regular.otf');
+}
+html,
+body {
 	width: 100%;
 	overflow-x: hidden;
+	font-family: 'Xanh Mono', monospace, 'Noto Serif TC', serif;
 }

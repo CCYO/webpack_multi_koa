@@ -19,7 +19,7 @@ const app = new Koa()
 
 let webpackConfig = require('../build/webpack.dev.config')
 let compiler = webpack(webpackConfig)
-
+let viewRoot
 
 if (isDev) {
 	// 用 webpack-dev-middleware 启动 webpack 编译
@@ -43,15 +43,18 @@ if (isDev) {
 	)
 	// 指定开发环境下的静态资源目录
 	app.use(koaMount(
-		CONFIG.PATH.PUBLIC_PATH,
+		CONFIG.PUBLIC_PATH,
 		koaStatic(path.join(__dirname, '../src'))
 	))
+	viewRoot = path.resolve(__dirname, '../dist/views')
 } else {
-	app.use(koaMount(CONFIG.PATH.PUBLIC_PATH, koaStatic(path.join(__dirname, `./${CONFIG.DIR.ASSET}`))))
-	const viewRoot = path.resolve(__dirname, '../dist/views')
-	app.use(views(viewRoot, { extension: 'ejs', map: { ejs: 'ejs' }, viewExt: 'ejs' }))
+	app.use(koaMount(
+		CONFIG.PUBLIC_PATH,
+		// koaStatic(path.join(__dirname, `./server/${CONFIG.SERVER.ASSET}`))
+		koaStatic(path.resolve(__dirname, `./assets`))
+	))
+	viewRoot = path.resolve(__dirname, `./${CONFIG.BUILD.VIEW}`)
 }
-const viewRoot = path.resolve(__dirname, '../dist/views')
 app.use(views(viewRoot, { extension: 'ejs', map: { ejs: 'ejs' }, viewExt: 'ejs' }))
 app.use(homeRouter.routes(), homeRouter.allowedMethods())
 app.use(welcomeRouter.routes(), welcomeRouter.allowedMethods())

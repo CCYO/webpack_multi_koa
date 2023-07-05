@@ -6,7 +6,6 @@ const { resolve } = require('path')
 const CONFIG = require('./config.js')
 const isDev = process.env.NODE_ENV === 'development'
 
-console.log('@c => ', CONFIG.PUBLIC_PATH)
 module.exports = {
 	context: resolve(__dirname),
 	entry: ((filepathList) => {
@@ -24,10 +23,10 @@ module.exports = {
 	})(glob.sync(resolve(__dirname, '../src/js/*.js'))),
 
 	output: {
-		path: resolve(__dirname, `../${CONFIG.DIR.DIST}`),
+		path: resolve(__dirname, `../${CONFIG.BUILD.DIST}`),
 		publicPath: CONFIG.PUBLIC_PATH,
-		filename: `${CONFIG.DIR.SCRIPT}/[name].bundle.js`,
-		chunkFilename: `${CONFIG.DIR.SCRIPT}/[name].[chunkhash].js`,
+		filename: `${CONFIG.BUILD.SCRIPT}/[name].bundle.js`,
+		chunkFilename: `${CONFIG.BUILD.SCRIPT}/[name].[contenthash:5].js`,
 		clean: true
 	},
 
@@ -51,9 +50,8 @@ module.exports = {
 				test: /\.(png|jpg|jpeg|gif)$/,
 				type: 'asset',
 				generator: {
-					outputPath: CONFIG.DIR.IMAGE,
-					publicPath: `${CONFIG.PUBLIC_PATH}${CONFIG.DIR.IMAGE}/`,
-					filename: `[name].[hash:5].[ext]`
+					// publicPath: `${CONFIG.PUBLIC_PATH}${CONFIG.BUILD.IMAGE}/`,
+					filename: `${CONFIG.BUILD.IMAGE}/[name].[contenthash:5][ext]`
 				},
 				parser: {
 					dataUrlCondition: {
@@ -73,24 +71,15 @@ module.exports = {
 				]
 			},
 			{
-				test: /\.(eot|woff2|woff|ttf|svg)$/,
+				test: /\.(eot|woff2|woff|ttf|svg|otf)$/,
 				type: 'asset/resource',
 				generator: {
-					outputPath: CONFIG.DIR.FONT,
-					publicPath: `${CONFIG.PUBLIC_PATH}${CONFIG.DIR.FONT}/`,
-					filename: `[name].[hash:5].[ext]`
-				},
-				// use: [
-				// 	{
-				// 		loader: 'file-loader',
-				// 		options: {
-				// 			outputPath: CONFIG.DIR.FONT
-				// 		}
-				// 	},
-				// 	{
-				// 		loader: 'url-loader'
-				// 	}
-				// ]
+					// outputPath: `${CONFIG.BUILD.FONT}`,
+					// publicPath: `..${CONFIG.PUBLIC_PATH}${CONFIG.BUILD.FONT}/`,
+					// publicPath: `/${CONFIG.BUILD.FONT}/`,
+					// publicPath: `${CONFIG.PUBLIC_PATH}`,
+					filename: `${CONFIG.BUILD.FONT}/[name].[contenthash:5].[ext]`
+				}
 			},
 			{
 				test: /\.ejs$/,
@@ -123,7 +112,7 @@ module.exports = {
 		...glob.sync(resolve(__dirname, '../src/views/*.ejs')).map((filepath, i) => {
 			const tempList = filepath.split(/[\/|\/\/|\\|\\\\]/g) // eslint-disable-line
 			// 读取 CONFIG.EXT 文件自定义的文件后缀名，默认生成 ejs 文件，可以定义生成 html 文件
-			const filename = (name => `${name.split('.')[0]}.${CONFIG.EXT}`)(`${CONFIG.DIR.VIEW}/${tempList[tempList.length - 1]}`)
+			const filename = (name => `${name.split('.')[0]}.${CONFIG.EXT}`)(`${CONFIG.BUILD.VIEW}/${tempList[tempList.length - 1]}`)
 			const template = filepath
 			const fileChunk = filename.split('.')[0].split(/[\/|\/\/|\\|\\\\]/g).pop() // eslint-disable-line
 			const chunks = isDev ? [fileChunk] : ['manifest', 'vendors', fileChunk]
