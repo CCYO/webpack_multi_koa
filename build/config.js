@@ -4,7 +4,7 @@ const isProd = mode === 'production'
 
 module.exports = {
 	PORT: 8080,
-	PUBLIC_PATH: "/public/",
+	PUBLIC_PATH: "/public",
 	BUILD: {
 		DIST: "dist",
 		ASSET: "assets", 

@@ -24,7 +24,7 @@ module.exports = {
 
 	output: {
 		path: resolve(__dirname, `../${CONFIG.BUILD.DIST}`),
-		publicPath: CONFIG.PUBLIC_PATH,
+		publicPath: `${CONFIG.PUBLIC_PATH}/`,
 		filename: `${CONFIG.BUILD.SCRIPT}/[name].bundle.js`,
 		chunkFilename: `${CONFIG.BUILD.SCRIPT}/[name].[contenthash:5].js`,
 		clean: true
@@ -50,7 +50,6 @@ module.exports = {
 				test: /\.(png|jpg|jpeg|gif)$/,
 				type: 'asset',
 				generator: {
-					// publicPath: `${CONFIG.PUBLIC_PATH}${CONFIG.BUILD.IMAGE}/`,
 					filename: `${CONFIG.BUILD.IMAGE}/[name].[contenthash:5][ext]`
 				},
 				parser: {
@@ -74,11 +73,7 @@ module.exports = {
 				test: /\.(eot|woff2|woff|ttf|svg|otf)$/,
 				type: 'asset/resource',
 				generator: {
-					// outputPath: `${CONFIG.BUILD.FONT}`,
-					// publicPath: `..${CONFIG.PUBLIC_PATH}${CONFIG.BUILD.FONT}/`,
-					// publicPath: `/${CONFIG.BUILD.FONT}/`,
-					// publicPath: `${CONFIG.PUBLIC_PATH}`,
-					filename: `${CONFIG.BUILD.FONT}/[name].[contenthash:5].[ext]`
+					filename: `${CONFIG.BUILD.FONT}/[name].[contenthash:5][ext]`
 				}
 			},
 			{
